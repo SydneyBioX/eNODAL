@@ -4,10 +4,10 @@
 \alias{runHT}
 \title{Run hypothesis testing using with eNODAL object.}
 \usage{
-runHT(eNODAL, Boot = 50)
+runHT(eNODAL_obj, Boot = 50)
 }
 \arguments{
-\item{eNODAL}{Input eNODAL object.}
+\item{eNODAL_obj}{Input eNODAL object.}
 
 \item{Boot}{Number of Bootstrapping used in test (npntest). By default is 50.}
 }

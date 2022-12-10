@@ -2,16 +2,16 @@
 % Please edit documentation in R/utils.R
 \name{.changename}
 \alias{.changename}
-\title{Change names of eNODAL clustering result}
+\title{Change names of eNODAL_obj clustering result}
 \usage{
-.changename(eNODAL)
+.changename(eNODAL_obj)
 }
 \arguments{
-\item{eNODAL}{An eNODAL object as input}
+\item{eNODAL_obj}{An eNODAL_obj object as input}
 }
 \value{
-eNODAL object with names specified by Meta_name.
+eNODAL_obj object with names specified by Meta_name.
 }
 \description{
-Change names of eNODAL clustering result
+Change names of eNODAL_obj clustering result
 }

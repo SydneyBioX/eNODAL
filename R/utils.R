@@ -1,24 +1,24 @@
 #' Add annotation for variable name
-#' @param eNODAL An fitted eNODAL object.
+#' @param eNODAL_obj An fitted eNODAL object.
 #' @param from Initial id type in eNODAL object.
-#' @param to To id type in eNODAL object.
+#' @param to To id type in eNODAL_obj object.
 #' @param db Annotation database.
-#' @returns An eNODAL object.
+#' @returns An eNODAL_obj object.
 #' @export
-runAnno <- function(eNODAL, from = "UNIPROT",
+runAnno <- function(eNODAL_obj, from = "UNIPROT",
                     to = c("SYMBOL", "ENTREZID"),
                     db = "org.Mm.eg.db"){
 
-  Cl_df <- eNODAL@eNODAL_output$Cluster_res
+  Cl_df <- eNODAL_obj@eNODAL_output$Cluster_res
   var_name <- Cl_df$varname
   transfer_tmp <- clusterProfiler::bitr(var_name, fromType = from, toType = to,
                                         OrgDb = db, drop = FALSE)
   for(i in 1:length(to)){
     Cl_df[[to[i]]] = transfer_tmp[,i + 1]
   }
-  eNODAL@eNODAL_output$Cluster_res <- as.data.frame(Cl_df)
+  eNODAL_obj@eNODAL_output$Cluster_res <- as.data.frame(Cl_df)
 
-  return(eNODAL)
+  return(eNODAL_obj)
 }
 
 #' Check each column of a dataframe is a factor or numerical
@@ -288,19 +288,19 @@ calctrans <- function(dists, method, d_max = 4){
 
 
 #' Calculate proportion of each component in linear model
-#' @param eNODAL An eNODAL object
+#' @param eNODAL_obj An eNODAL_obj object
 #' @param index A number specify which column to calculate
 #' @param Cl_sel A text specify which cluster this variable belongs to
 #' @importFrom stats var lm formula anova
 #' @return A vector contain proportion of variance each component explained.
-calcProp_lm <- function(eNODAL, index, Cl_sel){
+calcProp_lm <- function(eNODAL_obj, index, Cl_sel){
 
-  X <- eNODAL@Z
-  Meta1 <- eNODAL@Meta1
-  Meta2 <- eNODAL@Meta2
+  X <- eNODAL_obj@Z
+  Meta1 <- eNODAL_obj@Meta1
+  Meta2 <- eNODAL_obj@Meta2
   Xi <- X[,index]
   V_exp <- rep(0, 5)
-  lm_formula <- eNODAL@eNODAL_middle$formula$linear
+  lm_formula <- eNODAL_obj@eNODAL_middle$formula$linear
 
   var_tot <- var(Xi) * (nrow(X) - 1)
   data_g <- data.frame(Y = Xi, Meta1, Meta2)
@@ -350,20 +350,20 @@ calcProp_lm <- function(eNODAL, index, Cl_sel){
 }
 
 #' Calculate proportion of each component in gam model
-#' @param eNODAL An eNODAL object
+#' @param eNODAL_obj An eNODAL_obj object
 #' @param index A number specify which column to calculate
 #' @param Cl_sel A text specify which cluster this variable belongs to
 #' @importFrom stats var formula
 #' @return A vector contain proportion of variance each component explained.
-calcProp_gam <- function(eNODAL, index, Cl_sel){
+calcProp_gam <- function(eNODAL_obj, index, Cl_sel){
 
-  X <- eNODAL@Z
-  Meta1 <- eNODAL@Meta1
-  Meta2 <- eNODAL@Meta2
+  X <- eNODAL_obj@Z
+  Meta1 <- eNODAL_obj@Meta1
+  Meta2 <- eNODAL_obj@Meta2
   Xi <- X[,index]
   V_exp <- rep(0, 5)
 
-  gam_formula <- eNODAL@eNODAL_middle$formula$gam
+  gam_formula <- eNODAL_obj@eNODAL_middle$formula$gam
   data_g <- data.frame(Y = Xi, Meta1, Meta2)
 
   var_tot <- var(Xi)*(nrow(X) - 1)
@@ -412,19 +412,19 @@ calcProp_gam <- function(eNODAL, index, Cl_sel){
 }
 
 #' Calculate proportion of each component in gam model
-#' @param eNODAL An eNODAL object
-#' @return An eNODAL object with calculated proportion.
+#' @param eNODAL_obj An eNODAL_obj object
+#' @return An eNODAL_obj object with calculated proportion.
 #' @export
-calcProp <- function(eNODAL){
+calcProp <- function(eNODAL_obj){
 
-  Cl_df <- eNODAL@eNODAL_output$Cluster_res
+  Cl_df <- eNODAL_obj@eNODAL_output$Cluster_res
   if(is.null(Cl_df)){
-    message("Please run hypothesis test first! i.e. eNODAL <- runHT(eNODAL)")
-    return(eNODAL)
+    message("Please run hypothesis test first! i.e. eNODAL_obj <- runHT(eNODAL_obj)")
+    return(eNODAL_obj)
   }
-  X <- eNODAL@Z
-  Meta1 <- eNODAL@Meta1
-  Meta2 <- eNODAL@Meta2
+  X <- eNODAL_obj@Z
+  Meta1 <- eNODAL_obj@Meta1
+  Meta2 <- eNODAL_obj@Meta2
   idx_sig <- which(!is.na(Cl_df$Sig1))
   X_tmp <- X[,idx_sig]
 
@@ -432,40 +432,40 @@ calcProp <- function(eNODAL){
   for(i in 1:ncol(X_tmp)){
     Cl_sel <- Cl_df[idx_sig[i],"Sig1"]
     if(Cl_df$model[idx_sig[i]] == "lm"){
-      V_tmp <- calcProp_lm(eNODAL, idx_sig[i], Cl_sel)
+      V_tmp <- calcProp_lm(eNODAL_obj, idx_sig[i], Cl_sel)
     }else if(Cl_df$model[idx_sig[i]] == "gam"){
-      V_tmp <- calcProp_gam(eNODAL, idx_sig[i], Cl_sel)
+      V_tmp <- calcProp_gam(eNODAL_obj, idx_sig[i], Cl_sel)
     }
     V_exp[i,] <- V_tmp
   }
   colnames(V_exp) <- c("Meta1","Meta2", "Int", "E", "Tot")
   rownames(V_exp) <- colnames(X_tmp)
-  eNODAL@eNODAL_middle$VarExplained <- V_exp
-  return(eNODAL)
+  eNODAL_obj@eNODAL_middle$VarExplained <- V_exp
+  return(eNODAL_obj)
 }
 
 #' Calculate interpretable features for eNODAL object
-#' @param eNODAL An eNODAL object as input
+#' @param eNODAL_obj An eNODAL object as input
 #' Interaction effect only works for one numeric + one categorical variable
 #' @param baseline Baseline for comparison(like "control" in Meta2). By default is NULL.
 #' @param cor_method Method for calculate correlation matrix. By default is "spearman".
-#' @returns eNODAL object with created interpretable features
+#' @returns eNODAL_obj object with created interpretable features
 #' @importFrom stats formula model.matrix cor na.omit t.test
 #' @export
-createFeatures <- function(eNODAL, baseline = NULL, cor_method = "spearman"){
+createFeatures <- function(eNODAL_obj, baseline = NULL, cor_method = "spearman"){
 
-  Meta1 <- eNODAL@Meta1
-  Meta2 <- eNODAL@Meta2
-  Z <- eNODAL@Z
+  Meta1 <- eNODAL_obj@Meta1
+  Meta2 <- eNODAL_obj@Meta2
+  Z <- eNODAL_obj@Z
 
   data_g0 <- data.frame(Meta1, Meta2)
-  meta1_type <- eNODAL@eNODAL_middle$type$Meta1
-  meta2_type <- eNODAL@eNODAL_middle$type$Meta2
+  meta1_type <- eNODAL_obj@eNODAL_middle$type$Meta1
+  meta2_type <- eNODAL_obj@eNODAL_middle$type$Meta2
 
-  Int_formula <- substr(eNODAL@eNODAL_middle$formula$linear["int_alt"],2,100)
+  Int_formula <- substr(eNODAL_obj@eNODAL_middle$formula$linear["int_alt"],2,100)
   Int_term <- model.matrix(formula(Int_formula), data = data_g0)[,-1]
 
-  all_formula <- substr(eNODAL@eNODAL_middle$formula$linear["full"],2,100)
+  all_formula <- substr(eNODAL_obj@eNODAL_middle$formula$linear["full"],2,100)
   all_term <- model.matrix(formula(all_formula), data = data_g0)[,-1]
   all_col <- ncol(all_term)
   F_res <- matrix(0, nrow = ncol(Z), ncol = all_col)
@@ -583,23 +583,23 @@ createFeatures <- function(eNODAL, baseline = NULL, cor_method = "spearman"){
     }
   }
 
-  eNODAL@eNODAL_middle$Features = F_res
-  eNODAL@eNODAL_middle$F_type = grp
-  return(eNODAL)
+  eNODAL_obj@eNODAL_middle$Features = F_res
+  eNODAL_obj@eNODAL_middle$F_type = grp
+  return(eNODAL_obj)
 }
 
-#' Change names of eNODAL clustering result
-#' @param eNODAL An eNODAL object as input
-#' @returns eNODAL object with names specified by Meta_name.
+#' Change names of eNODAL_obj clustering result
+#' @param eNODAL_obj An eNODAL_obj object as input
+#' @returns eNODAL_obj object with names specified by Meta_name.
 #'
-.changename <- function(eNODAL){
+.changename <- function(eNODAL_obj){
 
-  Meta1_name <- eNODAL@eNODAL_middle$name$Meta1
-  Meta2_name <- eNODAL@eNODAL_middle$name$Meta2
+  Meta1_name <- eNODAL_obj@eNODAL_middle$name$Meta1
+  Meta2_name <- eNODAL_obj@eNODAL_middle$name$Meta2
 
-  Cl_df <- eNODAL@eNODAL_output$Cluster_res
+  Cl_df <- eNODAL_obj@eNODAL_output$Cluster_res
   if(is.null(Cl_df)){
-    return(eNODAL)
+    return(eNODAL_obj)
   }else{
     if(!all(is.na(Cl_df$Sig1))){
       Cl_df$Sig1 <- gsub("Meta1", Meta1_name, Cl_df$Sig1)
@@ -609,8 +609,65 @@ createFeatures <- function(eNODAL, baseline = NULL, cor_method = "spearman"){
       Cl_df$Sig2 <- gsub("Meta1", Meta1_name, Cl_df$Sig2)
       Cl_df$Sig2 <- gsub("Meta2", Meta2_name, Cl_df$Sig2)
     }
-    eNODAL@eNODAL_output$Cluster_res <- Cl_df
+    eNODAL_obj@eNODAL_output$Cluster_res <- Cl_df
   }
-  return(eNODAL)
+  return(eNODAL_obj)
 
 }
+
+#' Print all the clustering of eNODAL result
+#' @param eNODAL_obj, an eNODAL object.
+#' @return Clustering result of eNODAL object.
+#' @export
+show_clusters <- function(eNODAL_obj){
+
+  Cl_df <- eNODAL_obj@eNODAL_output$Cluster_res
+  if(is.null(Cl_df)){
+    cat("Currently no clustering result.")
+  }else{
+    sig0 <- Cl_df$Sig0
+    if(!is.null(sig0)){
+      sig0_tab <- table(sig0)
+      text_tmp <- c()
+      for(i in 1:length(sig0_tab)){
+        text_tmp <- paste0(text_tmp, names(sig0_tab)[i], "(", sig0_tab[i], "), ")
+      }
+      text_tmp <- substr(text_tmp, 1, nchar(text_tmp) - 2)
+      cat("Level0, significant vs. non-significant under experimental condition: \n",
+          text_tmp, "\n")
+    }
+    sig1 <- Cl_df$Sig1
+    if(!is.null(sig1)){
+      sig1_tab <- table(sig1)
+      text_tmp <- c()
+      for(i in 1:length(sig1_tab)){
+        text_tmp <- paste0(text_tmp, names(sig1_tab)[i], "(", sig1_tab[i], "), ")
+      }
+      text_tmp <- substr(text_tmp, 1, nchar(text_tmp) - 2)
+      cat("Level1, marginal effect vs. interaction effect: \n",
+          text_tmp,
+          "\n")
+    }
+    sig2 <- Cl_df$Sig2
+    if(!is.null(sig2)){
+      sig2_tab <- table(sig2)
+      text_tmp <- c()
+      for(i in 1:length(sig2_tab)){
+        text_tmp <- paste0(text_tmp, names(sig2_tab)[i], "(", sig2_tab[i], "), ")
+      }
+      text_tmp <- substr(text_tmp, 1, nchar(text_tmp) - 2)
+      cat("Level2, unsupervised clustering within each cluster: \n",
+          text_tmp)
+    }
+  }
+}
+
+#' Get clustering result of eNODAL object
+#' @param eNODAL_obj, an eNODAL object.
+#' @return Clustering result of eNODAL object.
+#' @export
+get_clusters <- function(eNODAL_obj){
+  Cl_df <- eNODAL_obj@eNODAL_output$Cluster_res
+  return(Cl_df)
+}
+

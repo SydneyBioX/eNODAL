@@ -27,11 +27,11 @@ eNODAL_build(
 
 \item{Meta2_name}{Name of experiment conditions in Meta2. If it is NULL will name "Meta2".}
 
-\item{...}{Other parameters can pass to eNODAL_build
+\item{...}{Other parameters can pass to eNODAL_obj_build
 See \code{\link{createParams}}}
 }
 \value{
-An eNODAL object
+An eNODAL_obj object
 }
 \description{
 Build eNODAL object

@@ -4,10 +4,10 @@
 \alias{calcProp_gam}
 \title{Calculate proportion of each component in gam model}
 \usage{
-calcProp_gam(eNODAL, index, Cl_sel)
+calcProp_gam(eNODAL_obj, index, Cl_sel)
 }
 \arguments{
-\item{eNODAL}{An eNODAL object}
+\item{eNODAL_obj}{An eNODAL_obj object}
 
 \item{index}{A number specify which column to calculate}
 

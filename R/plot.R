@@ -209,8 +209,8 @@ ggSurface<-function(GAM, data, XYZ = NA,
 
 }
 
-#' Generate NGF using eNODAL object
-#' @param eNODAL An eNODAL object
+#' Generate NGF using eNODAL_obj object
+#' @param eNODAL An eNODAL_obj object
 #' @param Zaxis An index or name of vector to select a variable for Zaxis.
 #' @param XYaxis Variables of XYaxis,
 #' can be chosen from all continuous variable in meta1 and meta2.
@@ -220,7 +220,7 @@ ggSurface<-function(GAM, data, XYZ = NA,
 #' @param scaled Whether scale for Z variable.
 #' @param type Can be chosen from "Int", "Add", "Meta1" and "Meta2",
 #' for different types of visualization.
-#' By default is NULL, will be chosen from eNODAL fitting result.
+#' By default is NULL, will be chosen from eNODAL_obj fitting result.
 #' @param formula0 Formula used for gam fitting. By default is NULL.
 #'  Will automatically determined by other parameters.
 #' @param ... Other parameters can be passed to NGFPlot.
@@ -232,21 +232,21 @@ ggSurface<-function(GAM, data, XYZ = NA,
 #' data(eNODAL_example)
 #' p = NGFPlot(eNODAL_example, 1, c("intake.P", "intake.C"))
 #' @export
-NGFPlot <- function(eNODAL, Zaxis, XYaxis, By = NULL, scaled = T,
+NGFPlot <- function(eNODAL_obj, Zaxis, XYaxis, By = NULL, scaled = T,
                     type = NULL, formula0 = NULL, ...){
 
   rgb.palette<- grDevices::colorRampPalette(c("blue","cyan","yellow","red"),
                                             space="Lab", interpolate="linear")
   map<-rgb.palette(256)
 
-  Z <- eNODAL@Z
-  Meta1 <- eNODAL@Meta1
-  Meta2 <- eNODAL@Meta2
-  gam_k <- eNODAL@params$gam_k
-  Meta1_name <- eNODAL@eNODAL_middle$name$Meta1
-  Meta2_name <- eNODAL@eNODAL_middle$name$Meta2
+  Z <- eNODAL_obj@Z
+  Meta1 <- eNODAL_obj@Meta1
+  Meta2 <- eNODAL_obj@Meta2
+  gam_k <- eNODAL_obj@params$gam_k
+  Meta1_name <- eNODAL_obj@eNODAL_middle$name$Meta1
+  Meta2_name <- eNODAL_obj@eNODAL_middle$name$Meta2
 
-  Cl_df <- eNODAL@eNODAL_output$Cluster_res
+  Cl_df <- eNODAL_obj@eNODAL_output$Cluster_res
   if(any(grepl(paste0("sig|Int|Add|",Meta1_name,"|",Meta2_name), Zaxis))){
     if(Zaxis == "sig"){
       idx_tmp <- which(Cl_df$Sig0 == Zaxis)
@@ -457,14 +457,14 @@ NGFPlot <- function(eNODAL, Zaxis, XYaxis, By = NULL, scaled = T,
   }
 }
 
-#' Generate clustering result plot for eNODAL object
-#' @param eNODAL An eNODAL object.(Already run two stage clustering)
+#' Generate clustering result plot for eNODAL_obj object
+#' @param eNODAL An eNODAL_obj object.(Already run two stage clustering)
 #' @import ggplot2
-#' @return A concentric plot of eNODAL clustering result
+#' @return A concentric plot of eNODAL_obj clustering result
 #' @export
-ClusterPlot <- function(eNODAL){
+ClusterPlot <- function(eNODAL_obj){
 
-  Cl_df <- eNODAL@eNODAL_output$Cluster_res
+  Cl_df <- eNODAL_obj@eNODAL_output$Cluster_res
 
   if(is.null(Cl_df)){
     message("Please run processing first!")
@@ -511,8 +511,8 @@ ClusterPlot <- function(eNODAL){
     theme_minimal()
   return(p)
 }
-#' Generate Boxplot using eNODAL object
-#' @param eNODAL An eNODAL object
+#' Generate Boxplot using eNODAL_obj object
+#' @param eNODAL_obj An eNODAL_obj object
 #' @param Zaxis An index or name of vector to select a variable for Zaxis.
 #' @param XYaxis Variables of XYaxis,
 #' can be chosen from all continuous variable in meta1 and meta2.
@@ -524,20 +524,20 @@ ClusterPlot <- function(eNODAL){
 #' @import ggplot2
 #' @importFrom stats median prcomp
 #' @export
-Boxplot <- function(eNODAL, XYaxis, Zaxis, scaled = F, ...){
+Boxplot <- function(eNODAL_obj, XYaxis, Zaxis, scaled = F, ...){
 
-  Cl_df <- eNODAL@eNODAL_output$Cluster_res
+  Cl_df <- eNODAL_obj@eNODAL_output$Cluster_res
 
   if(is.null(Cl_df)){
     message("Please run processing first!")
     return(NULL)
   }
-  Z <- eNODAL@Z
-  Meta1 <- eNODAL@Meta1
-  Meta2 <- eNODAL@Meta2
-  gam_k <- eNODAL@params$gam_k
-  Meta1_name <- eNODAL@eNODAL_middle$name$Meta1
-  Meta2_name <- eNODAL@eNODAL_middle$name$Meta2
+  Z <- eNODAL_obj@Z
+  Meta1 <- eNODAL_obj@Meta1
+  Meta2 <- eNODAL_obj@Meta2
+  gam_k <- eNODAL_obj@params$gam_k
+  Meta1_name <- eNODAL_obj@eNODAL_middle$name$Meta1
+  Meta2_name <- eNODAL_obj@eNODAL_middle$name$Meta2
 
   if(any(grepl(paste0("sig|Int|Add|",Meta1_name,"|",Meta2_name), Zaxis))){
     if(Zaxis == "sig"){

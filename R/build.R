@@ -5,9 +5,9 @@
 #' @param Phenotype A dataframe of phenotype output.
 #' @param Meta1_name Name of experiment conditions in Meta1. If it is NULL will name "Meta1".
 #' @param Meta2_name Name of experiment conditions in Meta2. If it is NULL will name "Meta2".
-#' @param ... Other parameters can pass to eNODAL_build
+#' @param ... Other parameters can pass to eNODAL_obj_build
 #' See \code{\link{createParams}}
-#' @return An eNODAL object
+#' @return An eNODAL_obj object
 #' @examples
 #' data(Proteomics)
 #' Z = Proteomics$Z
@@ -226,7 +226,7 @@ eNODAL_build <- function(Z, Meta1, Meta2, Phenotype = NULL,
   return(eNODAL_obj)
 }
 
-#' Create parameters list for eNODAL object.
+#' Create parameters list for eNODAL_obj object.
 #' @param gam_k Parameter k in GAM model. By default is 29.
 #' @param gam Whether use create GAM formula. By default is TRUE.
 #' If no continuous variable, set FALSE.
@@ -252,8 +252,8 @@ eNODAL_build <- function(Z, Meta1, Meta2, Phenotype = NULL,
 #' By default is Louvian, with knn.k = 15, dist_thresh = 0.3.
 #' @param adj_method Pvalue adjust method. See p.adjust. By default is "BH".
 #' @param sig_test Method for test between sig vs. non-sig. Can be choosen from "LC-test", "lm" or "gam.
-#' @param ... Other parameters can be passed to eNODAL.
-#' @return A list contain parameters in eNODAL object.
+#' @param ... Other parameters can be passed to eNODAL_obj.
+#' @return A list contain parameters in eNODAL_obj object.
 #' @export
 
 createParams <- function(gam_k = 29, gam = TRUE, test_method = "F",
@@ -322,58 +322,4 @@ createClParam <- function(q0 = 0, knn.k = 40, dist_thresh = 0.4,
     Param0 <- append(Param0, list(tmp_param))
   }
   return(Param0)
-}
-
-#' Print all the clustering of eNODAL result
-#' @param eNODAL, an eNODAL object.
-#' @return Clustering result of eNODAL object.
-show_clusters <- function(eNODAL){
-
-  Cl_df <- eNODAL@eNODAL_output$Cluster_res
-  if(is.null(Cl_df)){
-    cat("Currently no clustering result.")
-  }else{
-    sig0 <- Cl_df$Sig0
-    if(!is.null(sig0)){
-      sig0_tab <- table(sig0)
-      text_tmp <- c()
-      for(i in 1:length(sig0_tab)){
-        text_tmp <- paste0(text_tmp, names(sig0_tab)[i], "(", sig0_tab[i], "), ")
-      }
-      text_tmp <- substr(text_tmp, 1, nchar(text_tmp) - 2)
-      cat("Level0, significant vs. non-significant under experimental condition: \n",
-                         text_tmp, "\n")
-    }
-    sig1 <- Cl_df$Sig1
-    if(!is.null(sig1)){
-      sig1_tab <- table(sig1)
-      text_tmp <- c()
-      for(i in 1:length(sig1_tab)){
-        text_tmp <- paste0(text_tmp, names(sig1_tab)[i], "(", sig1_tab[i], "), ")
-      }
-      text_tmp <- substr(text_tmp, 1, nchar(text_tmp) - 2)
-      cat("Level1, marginal effect vs. interaction effect: \n",
-                      text_tmp,
-                      "\n")
-    }
-    sig2 <- Cl_df$Sig2
-    if(!is.null(sig2)){
-      sig2_tab <- table(sig2)
-      text_tmp <- c()
-      for(i in 1:length(sig2_tab)){
-        text_tmp <- paste0(text_tmp, names(sig2_tab)[i], "(", sig2_tab[i], "), ")
-      }
-      text_tmp <- substr(text_tmp, 1, nchar(text_tmp) - 2)
-      cat("Level2, unsupervised clustering within each cluster: \n",
-                     text_tmp)
-    }
-  }
-}
-
-#' Get clustering result of eNODAL object
-#' @param eNODAL, an eNODAL object.
-#' @return Clustering result of eNODAL object.
-get_clusters <- function(eNODAL){
-  Cl_df <- eNODAL@eNODAL_output$Cluster_res
-  return(Cl_df)
 }

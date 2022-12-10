@@ -2,12 +2,12 @@
 % Please edit documentation in R/Stage1.R
 \name{hybrid_test}
 \alias{hybrid_test}
-\title{Hybrid test for eNODAL object.}
+\title{Hybrid test for eNODAL_obj object.}
 \usage{
-hybrid_test(eNODAL, type = "interaction", test_func = "lm", Boot = 50)
+hybrid_test(eNODAL_obj, type = "interaction", test_func = "lm", Boot = 50)
 }
 \arguments{
-\item{eNODAL}{An eNODAL object as output.}
+\item{eNODAL_obj}{An eNODAL object as output.}
 
 \item{type}{Testing type. Can be chosen from
 "linear"(linear vs gam using npntest), "interaction"(interaction effect)
@@ -21,5 +21,5 @@ hybrid_test(eNODAL, type = "interaction", test_func = "lm", Boot = 50)
 pvalue number.
 }
 \description{
-Hybrid test for eNODAL object.
+Hybrid test for eNODAL_obj object.
 }

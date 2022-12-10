@@ -2,7 +2,7 @@
 % Please edit documentation in R/build.R
 \name{createParams}
 \alias{createParams}
-\title{Create parameters list for eNODAL object.}
+\title{Create parameters list for eNODAL_obj object.}
 \usage{
 createParams(
   gam_k = 29,
@@ -71,11 +71,11 @@ By default is 0.4, If it is NULL, will not use Louvian.}
 Format: list(clmethod = ..., params = ...), available method and parameters listed above.
 By default is Louvian, with knn.k = 15, dist_thresh = 0.3.}
 
-\item{...}{Other parameters can be passed to eNODAL.}
+\item{...}{Other parameters can be passed to eNODAL_obj.}
 }
 \value{
-A list contain parameters in eNODAL object.
+A list contain parameters in eNODAL_obj object.
 }
 \description{
-Create parameters list for eNODAL object.
+Create parameters list for eNODAL_obj object.
 }

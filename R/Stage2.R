@@ -1,21 +1,21 @@
-#' Run subclustering using with eNODAL object.
-#' @param eNODAL Input eNODAL object.
+#' Run subclustering using with eNODAL_obj object.
+#' @param eNODAL_obj Input eNODAL object.
 #' @return eNODAL object with clustering result(Stage II).
 #' @export
-runSubclust <- function(eNODAL){
+runSubclust <- function(eNODAL_obj){
 
-  ClParam <- eNODAL@params$Clparam
-  Cl_df <- eNODAL@eNODAL_output$Cluster_res
+  ClParam <- eNODAL_obj@params$Clparam
+  Cl_df <- eNODAL_obj@eNODAL_output$Cluster_res
   sig_levels <- na.omit(unique(Cl_df$Sig1))
-  X <- eNODAL@Z
-  V_exp <- eNODAL@eNODAL_middle$VarExplained
+  X <- eNODAL_obj@Z
+  V_exp <- eNODAL_obj@eNODAL_middle$VarExplained
   if(is.null(V_exp)){
-    eNODAL <- calcProp(eNODAL)
-    V_exp <- eNODAL@eNODAL_middle$VarExplained
+    eNODAL_obj <- calcProp(eNODAL_obj)
+    V_exp <- eNODAL_obj@eNODAL_middle$VarExplained
   }
 
-  consensus_param <- eNODAL@params$consensus_param
-  save_dist <- eNODAL@params$save_dist
+  consensus_param <- eNODAL_obj@params$consensus_param
+  save_dist <- eNODAL_obj@params$save_dist
 #  if(!is.null(V_exp)){
 #    V_prop = V_exp[,1:3]/rowSums(V_exp[,1:3])
 #  }else{
@@ -29,7 +29,7 @@ runSubclust <- function(eNODAL){
     V_sel <- V_exp[Cl_df$varname[idx_tmp],]
     Dist_list <- createDistList(X_sel, V_sel, dist_method = "all")
     if(save_dist){
-      eNODAL@eNODAL_middle$Dist_list = Dist_list
+      eNODAL_obj@eNODAL_middle$Dist_list = Dist_list
     }
     cluster <- createConsensus(Dist_list, ClParam)
     Param_cons <- consensus_param
@@ -39,8 +39,8 @@ runSubclust <- function(eNODAL){
     names(cluster_name) <- names(cluster)
     Cl_df$Sig2[match(names(cluster_name),Cl_df$varname)] <- cluster_name
   }
-  eNODAL@eNODAL_output$Cluster_res <- Cl_df
-  return(eNODAL)
+  eNODAL_obj@eNODAL_output$Cluster_res <- Cl_df
+  return(eNODAL_obj)
 }
 
 
@@ -152,11 +152,11 @@ clusterMethodk <- function(Dist, clmethod, k = 5, ...){
 #' @return An eNODAL object with calculated Atchison distance.
 createwD2 <- function(V_exp){
 
-#  Cl_df <- eNODAL@eNODAL_output$Cluster_res
-#  V_exp <- eNODAL@eNODAL_middle$VarExplained
+#  Cl_df <- eNODAL_obj@eNODAL_output$Cluster_res
+#  V_exp <- eNODAL_obj@eNODAL_middle$VarExplained
 #  if(is.null(V_exp)){
-#    eNODAL <- calcProp(eNODAL)
-#    V_exp <- eNODAL@eNODAL_middle$VarExplained
+#    eNODAL_obj <- calcProp(eNODAL_obj)
+#    V_exp <- eNODAL_obj@eNODAL_middle$VarExplained
 #  }
   V_prop <- V_exp[,1:3]
   V_prop <- V_prop/rowSums(V_prop)
@@ -176,7 +176,7 @@ createwD2 <- function(V_exp){
   return(D2)
 }
 
-#createwD <- function(eNODAL, manual_Feature, manual_grp, V_prop, D2 = NULL,
+#createwD <- function(eNODAL_obj, manual_Feature, manual_grp, V_prop, D2 = NULL,
 #                     sig_level = c("Meta1" = 0.01, "Meta2" = 0.05, "Int" = 0.1),
 #                     trans = "none", weighted_type = 1){
 

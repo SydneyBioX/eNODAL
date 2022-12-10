@@ -4,10 +4,10 @@
 \alias{runeNODAL}
 \title{Run eNODAL using with eNODAL object.}
 \usage{
-runeNODAL(eNODAL)
+runeNODAL(eNODAL_obj)
 }
 \arguments{
-\item{eNODAL}{Input eNODAL object.}
+\item{eNODAL_obj}{Input eNODAL object.}
 }
 \value{
 eNODAL with clustering result.

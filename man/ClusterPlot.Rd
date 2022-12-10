@@ -2,16 +2,16 @@
 % Please edit documentation in R/plot.R
 \name{ClusterPlot}
 \alias{ClusterPlot}
-\title{Generate clustering result plot for eNODAL object}
+\title{Generate clustering result plot for eNODAL_obj object}
 \usage{
-ClusterPlot(eNODAL)
+ClusterPlot(eNODAL_obj)
 }
 \arguments{
-\item{eNODAL}{An eNODAL object.(Already run two stage clustering)}
+\item{eNODAL}{An eNODAL_obj object.(Already run two stage clustering)}
 }
 \value{
-A concentric plot of eNODAL clustering result
+A concentric plot of eNODAL_obj clustering result
 }
 \description{
-Generate clustering result plot for eNODAL object
+Generate clustering result plot for eNODAL_obj object
 }

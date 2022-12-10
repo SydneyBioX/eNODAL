@@ -4,10 +4,10 @@
 \alias{createFeatures}
 \title{Calculate interpretable features for eNODAL object}
 \usage{
-createFeatures(eNODAL, baseline = NULL, cor_method = "spearman")
+createFeatures(eNODAL_obj, baseline = NULL, cor_method = "spearman")
 }
 \arguments{
-\item{eNODAL}{An eNODAL object as input
+\item{eNODAL_obj}{An eNODAL object as input
 Interaction effect only works for one numeric + one categorical variable}
 
 \item{baseline}{Baseline for comparison(like "control" in Meta2). By default is NULL.}
@@ -15,7 +15,7 @@ Interaction effect only works for one numeric + one categorical variable}
 \item{cor_method}{Method for calculate correlation matrix. By default is "spearman".}
 }
 \value{
-eNODAL object with created interpretable features
+eNODAL_obj object with created interpretable features
 }
 \description{
 Calculate interpretable features for eNODAL object

@@ -1,0 +1,166 @@
+---
+title: "eNODAL"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{eNODAL}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Introduction
+
+Experimental guided nutriomics data clustering(eNODAL) method is an R package that
+facilitates discovery of relationships among high dimensional omics features and 
+complex experimental condition.
+
+The method use a two-stage clustering method. At first stage, eNODAL using an ANOVA
+model to categorize omics features into several interpretable groups, in the second
+stage, eNODAL using consensus clustering method to further cluster each groups into 
+sublcusters. The overall workflow of eNODAL shown in the following.
+
+![workflow](../inst/figures/workflow.jpg)
+
+```{r setup}
+library(eNODAL)
+```
+
+eNODAL use three modality as input, high dimensional omics features(Z), one set of 
+experimental conditions, e.g. nutrition intake, denoted as Meta1 and another set of
+experimental conditions e.g. drug treatment, denoted as Meta2. Both of these factors
+can be (multiple) numerical variables or factors.
+
+In this vignette, we go through a mouse liver proteomics data with different nutrition
+and drug treatment to analysis how nutrition and drug treatment influence these proteomics 
+features.
+
+# Mouse liver proteomics data
+
+The `Proteomics` dataset contain data from a mouse liver proteomics study, 
+the nutrition intake of each constructed from a combination of 10 types of diet
+and the amount of food and nutrition is measured. Each mouse takes one of four 
+types of treatment, including control, metformin, rapamycin and resveratrol, resulting
+40 combinations of complex experimental conditions
+
+
+In this example, we simplified to first 1,000 proteomics and we will use eNODAL
+to categorize each proteomics feature interpretable group, significantly affected by
+1) nutrition intake, 2) drug intake, 3) nutrition drug additive effect, 4) nutrition 
+and drug interaction effect and 5) not signifcantly affected by all experimental 
+conditions. Then eNODAL will further do consensus clustering for each interpretable 
+group.
+
+```{r}
+data("Proteomics")
+```
+
+## Build the `eNODAL` object
+
+First we build the `eNODAL` object, the input data to build `eNODAL` have three 
+part: omics data(Z), experimental condition 1(Meta1) and experimental condition2(Meta2).
+(Meta1 and Meta2 better to be low dimensional). Meta1 and Meta2 can be both a vector
+or dataframe. Z can be a matrix or dataframe. For all of these data, each row 
+is a sample and each column is a feature.
+
+In the following example, we build `eNODAL` object based on data in `Proteomics`.
+
+```{r}
+Z <- Proteomics$Z
+Meta1 <- Proteomics$Meta1
+Meta2 <- Proteomics$Meta2
+```
+
+eNODAL object can also incorporate lots of parameters used in the hypothesis testing,
+consensus clustering. Especially, we implemented both linear model(lm) and 
+general additive model(gam). Details of these parameters see `?createParams`. 
+To accelerate the processing, we use all linear model to for testing.
+
+
+```{r}
+eNODAL_obj = eNODAL_build(Z = Z, Meta1 = Meta1, Meta2 = Meta2, sig_test = "lm", test_func = "lm")
+```
+
+### Run the `eNODAL`.
+
+Now using the `runeNODAL` function, we can run `eNODAL` object with the specified
+parameters in the `eNODAL_build` or `createParams`.
+
+```{r}
+eNODAL_obj = runeNODAL(eNODAL_obj)
+```
+
+which is equivalent to the following code
+
+eNODAL_obj = runHT(eNODAL_obj)
+eNODAL_obj = runSubclust(eNODAL_obj)
+
+The clustering result can be got by 
+
+```{r}
+Cl_df <- get_clusters(eNODAL_obj)
+```
+
+And the resulting cluster can be shown by
+
+```{r}
+show_clusters(eNODAL_obj)
+```
+
+and can also be visualized by
+
+```{r}
+ClusterPlot(eNODAL_obj)
+```
+
+# Visualization
+
+In this section, we will show how to visualize relationships between omics feautures,
+(or resulting cluters) and continuous variables(nutrition intake) by nutrition
+geometry framewor and discrete variables(drug intake) by boxplot.
+
+## Nutrition geometry framework(NGF)
+
+Even we do not do `runeNODAL`, we can also run NGF based on selected omics features
+(can be both feature name or index). In the following example, we will illustrate
+the NGF of eNODAL object on protein `P19096` on "intake.P", "intake.C" and "intake.F".
+The resulting NGF will be any two combination of nutrition feature and the third one 
+be the median.
+
+```{r}
+NGFPlot(eNODAL_obj, "P19096", c("intake.P", "intake.C", "intake.F"))
+```
+
+We can also visualize the protein for each group, i.e. split by "Meta2"(Drug) and 
+the resulting NGF are shown below.
+
+```{r}
+NGFPlot(eNODAL_obj, "P19096", c("intake.P", "intake.C", "intake.F"), "Meta2")
+```
+We can also visualize the interpretable groups or subclusters by their first principal component.
+
+```{r}
+NGFPlot(eNODAL_obj, "Meta1_C1", c("intake.P", "intake.C", "intake.F"))
+```
+
+## Boxplot
+
+For discrete variable,  we can visualize by boxplot
+
+```{r}
+Boxplot(eNODAL_obj, "Meta2", "P19096")
+```
+
+
+# Misc
+
+```{r}
+sessionInfo()
+```
+
+

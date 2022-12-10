@@ -4,10 +4,10 @@
 \alias{calcProp_lm}
 \title{Calculate proportion of each component in linear model}
 \usage{
-calcProp_lm(eNODAL, index, Cl_sel)
+calcProp_lm(eNODAL_obj, index, Cl_sel)
 }
 \arguments{
-\item{eNODAL}{An eNODAL object}
+\item{eNODAL_obj}{An eNODAL_obj object}
 
 \item{index}{A number specify which column to calculate}
 

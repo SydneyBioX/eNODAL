@@ -4,13 +4,13 @@
 \alias{calcProp}
 \title{Calculate proportion of each component in gam model}
 \usage{
-calcProp(eNODAL)
+calcProp(eNODAL_obj)
 }
 \arguments{
-\item{eNODAL}{An eNODAL object}
+\item{eNODAL_obj}{An eNODAL_obj object}
 }
 \value{
-An eNODAL object with calculated proportion.
+An eNODAL_obj object with calculated proportion.
 }
 \description{
 Calculate proportion of each component in gam model

@@ -2,12 +2,12 @@
 % Please edit documentation in R/plot.R
 \name{Boxplot}
 \alias{Boxplot}
-\title{Generate Boxplot using eNODAL object}
+\title{Generate Boxplot using eNODAL_obj object}
 \usage{
-Boxplot(eNODAL, XYaxis, Zaxis, scaled = F, ...)
+Boxplot(eNODAL_obj, XYaxis, Zaxis, scaled = F, ...)
 }
 \arguments{
-\item{eNODAL}{An eNODAL object}
+\item{eNODAL_obj}{An eNODAL_obj object}
 
 \item{XYaxis}{Variables of XYaxis,
 can be chosen from all continuous variable in meta1 and meta2.
@@ -23,7 +23,7 @@ If more than one vector provided, will automatically do choose(n,2)}
 A list of NGF plot.
 }
 \description{
-Generate Boxplot using eNODAL object
+Generate Boxplot using eNODAL_obj object
 }
 \seealso{
 \code{\link{ggSurface}}

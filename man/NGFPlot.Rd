@@ -2,10 +2,10 @@
 % Please edit documentation in R/plot.R
 \name{NGFPlot}
 \alias{NGFPlot}
-\title{Generate NGF using eNODAL object}
+\title{Generate NGF using eNODAL_obj object}
 \usage{
 NGFPlot(
-  eNODAL,
+  eNODAL_obj,
   Zaxis,
   XYaxis,
   By = NULL,
@@ -16,8 +16,6 @@ NGFPlot(
 )
 }
 \arguments{
-\item{eNODAL}{An eNODAL object}
-
 \item{Zaxis}{An index or name of vector to select a variable for Zaxis.}
 
 \item{XYaxis}{Variables of XYaxis,
@@ -31,18 +29,20 @@ If it is NULL, will not fit with by.}
 
 \item{type}{Can be chosen from "Int", "Add", "Meta1" and "Meta2",
 for different types of visualization.
-By default is NULL, will be chosen from eNODAL fitting result.}
+By default is NULL, will be chosen from eNODAL_obj fitting result.}
 
 \item{formula0}{Formula used for gam fitting. By default is NULL.
 Will automatically determined by other parameters.}
 
 \item{...}{Other parameters can be passed to NGFPlot.}
+
+\item{eNODAL}{An eNODAL_obj object}
 }
 \value{
 A list of NGF plot.
 }
 \description{
-Generate NGF using eNODAL object
+Generate NGF using eNODAL_obj object
 }
 \examples{
 data(eNODAL_example)

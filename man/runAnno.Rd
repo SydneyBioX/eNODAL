@@ -5,23 +5,23 @@
 \title{Add annotation for variable name}
 \usage{
 runAnno(
-  eNODAL,
+  eNODAL_obj,
   from = "UNIPROT",
   to = c("SYMBOL", "ENTREZID"),
   db = "org.Mm.eg.db"
 )
 }
 \arguments{
-\item{eNODAL}{An fitted eNODAL object.}
+\item{eNODAL_obj}{An fitted eNODAL object.}
 
 \item{from}{Initial id type in eNODAL object.}
 
-\item{to}{To id type in eNODAL object.}
+\item{to}{To id type in eNODAL_obj object.}
 
 \item{db}{Annotation database.}
 }
 \value{
-An eNODAL object.
+An eNODAL_obj object.
 }
 \description{
 Add annotation for variable name

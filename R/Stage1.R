@@ -1,26 +1,26 @@
 #' Run hypothesis testing using with eNODAL object.
-#' @param eNODAL Input eNODAL object.
+#' @param eNODAL_obj Input eNODAL object.
 #' @param Boot Number of Bootstrapping used in test (npntest). By default is 50.
 #' @return eNODAL object with clustering result(Stage I).
 #' @importFrom stats lm p.adjust formula model.matrix
 #' @export
-runHT <- function(eNODAL, Boot = 50){
+runHT <- function(eNODAL_obj, Boot = 50){
 
-  h_adj <- eNODAL@params$h_adj
-  adj_method <- eNODAL@params$adj_method
-  sig_level <- eNODAL@params$sig_level
-  adapt <- eNODAL@params$adapt
-  test_func <- eNODAL@params$test_func
-  test_method <- eNODAL@params$test_method
-  sig_test <- eNODAL@params$sig_test
+  h_adj <- eNODAL_obj@params$h_adj
+  adj_method <- eNODAL_obj@params$adj_method
+  sig_level <- eNODAL_obj@params$sig_level
+  adapt <- eNODAL_obj@params$adapt
+  test_func <- eNODAL_obj@params$test_func
+  test_method <- eNODAL_obj@params$test_method
+  sig_test <- eNODAL_obj@params$sig_test
 
-  Z <- eNODAL@Z
-  Meta1 <- eNODAL@Meta1
-  Meta2 <- eNODAL@Meta2
+  Z <- eNODAL_obj@Z
+  Meta1 <- eNODAL_obj@Meta1
+  Meta2 <- eNODAL_obj@Meta2
   P_mat <- matrix(NA, nrow = ncol(Z), ncol = 5)
 
-  lm_formula <- eNODAL@eNODAL_middle$formula$linear
-  gam_formula <- eNODAL@eNODAL_middle$formula$gam
+  lm_formula <- eNODAL_obj@eNODAL_middle$formula$linear
+  gam_formula <- eNODAL_obj@eNODAL_middle$formula$gam
 
   p_sig <- c()
 
@@ -66,7 +66,7 @@ runHT <- function(eNODAL, Boot = 50){
   Cl_df_model <- rep(NA, ncol(Z))
 
   if(adapt){
-    p_lin <- hybrid_test(eNODAL, "linear", test_func, Boot)
+    p_lin <- hybrid_test(eNODAL_obj, "linear", test_func, Boot)
     p_lin <- sapply(p_lin,`[[`,1)
     P_mat[idx_sig,2] <- p_lin
 
@@ -88,7 +88,7 @@ runHT <- function(eNODAL, Boot = 50){
   for(i in 1:ncol(Z_tmp)){
 
     # Test interaction
-    int_res <- .hybrid_test(eNODAL, index = idx_sig[i],
+    int_res <- .hybrid_test(eNODAL_obj, index = idx_sig[i],
                             type = "interaction",
                             test_func = test_func_list[i])
 
@@ -96,7 +96,7 @@ runHT <- function(eNODAL, Boot = 50){
     Rsq_res[i,1:2] <- int_res$Rsq
 
     # Test N
-    Meta1_res <- .hybrid_test(eNODAL, index = idx_sig[i],
+    Meta1_res <- .hybrid_test(eNODAL_obj, index = idx_sig[i],
                               type = "meta1",
                               test_func = test_func_list[i])
 
@@ -104,7 +104,7 @@ runHT <- function(eNODAL, Boot = 50){
     Rsq_res[i,3:4] <- Meta1_res$Rsq
 
     # Test T
-    Meta2_res <- .hybrid_test(eNODAL, index = idx_sig[i],
+    Meta2_res <- .hybrid_test(eNODAL_obj, index = idx_sig[i],
                               type = "meta2",
                               test_func = test_func_list[i])
 
@@ -151,10 +151,10 @@ runHT <- function(eNODAL, Boot = 50){
   rownames(Rsq_res) <- colnames(Z_tmp)
   rownames(P_mat) <- colnames(Z)
   rownames(Cl_df) <- colnames(Z)
-  eNODAL@eNODAL_output$Cluster_res <- Cl_df
-  eNODAL@eNODAL_output$Pvalue <- P_mat
-  eNODAL@eNODAL_output$Rsq_res <- Rsq_res
-  return(eNODAL)
+  eNODAL_obj@eNODAL_output$Cluster_res <- Cl_df
+  eNODAL_obj@eNODAL_output$Pvalue <- P_mat
+  eNODAL_obj@eNODAL_output$Rsq_res <- Rsq_res
+  return(eNODAL_obj)
 }
 
 #' nonparametric ANOVA test from Zhou's paper using bootstrap.
@@ -294,7 +294,7 @@ lm_test <- function(Y, Meta1, Meta2, calc0, calc1, method = "F"){
 }
 
 #' Hybrid test for eNODAL object.
-#' @param eNODAL An eNODAL object as output.
+#' @param eNODAL_obj An eNODAL object as output.
 #' @param index Number of which omics feature to be tested.
 #' @param type Testing type. Can be chosen from
 #' "linear"(linear vs gam using npntest), "interaction"(interaction effect)
@@ -304,27 +304,27 @@ lm_test <- function(Y, Meta1, Meta2, calc0, calc1, method = "F"){
 #' @importFrom stats lm
 #' @return pvalue number.
 
-.hybrid_test <- function(eNODAL, index, type = "interaction",
+.hybrid_test <- function(eNODAL_obj, index, type = "interaction",
                          test_func = "lm", Boot = 50){
 
-  X <- eNODAL@Z
+  X <- eNODAL_obj@Z
   Y <- X[,index]
-  Meta1 <- eNODAL@Meta1
-  Meta2 <- eNODAL@Meta2
+  Meta1 <- eNODAL_obj@Meta1
+  Meta2 <- eNODAL_obj@Meta2
   data_g <- data.frame(Y = Y, Meta1, Meta2)
-  method = eNODAL@params$test_method
+  method = eNODAL_obj@params$test_method
   if(type == "linear"){
-    calc0 = eNODAL@eNODAL_middle$formula$linear[1]
-    calc1 = eNODAL@eNODAL_middle$formula$gam[1]
+    calc0 = eNODAL_obj@eNODAL_middle$formula$linear[1]
+    calc1 = eNODAL_obj@eNODAL_middle$formula$gam[1]
     p <- .npntest(data_g, calc0, calc1, lm, mgcv::gam, Boot)
     return(p)
   }
   if(test_func == "lm"){
     func <- lm
-    lm_formula <- eNODAL@eNODAL_middle$formula$linear
+    lm_formula <- eNODAL_obj@eNODAL_middle$formula$linear
   }else if(test_func == "gam"){
     func <- mgcv::gam
-    gam_formula <- eNODAL@eNODAL_middle$formula$gam
+    gam_formula <- eNODAL_obj@eNODAL_middle$formula$gam
   }
 
   if(type == "interaction"){
@@ -359,8 +359,8 @@ lm_test <- function(Y, Meta1, Meta2, calc0, calc1, method = "F"){
   return(p)
 }
 
-#' Hybrid test for eNODAL object.
-#' @param eNODAL An eNODAL object as output.
+#' Hybrid test for eNODAL_obj object.
+#' @param eNODAL_obj An eNODAL object as output.
 #' @param type Testing type. Can be chosen from
 #' "linear"(linear vs gam using npntest), "interaction"(interaction effect)
 #' "meta1"(marginal effect of Meta1) and "meta2"(marginal effect of Meta2)
@@ -368,12 +368,12 @@ lm_test <- function(Y, Meta1, Meta2, calc0, calc1, method = "F"){
 #' @param Boot Number of bootstrapping. By default is 50.
 #' @return pvalue number.
 #' @export
-hybrid_test <- function(eNODAL, type = "interaction",
+hybrid_test <- function(eNODAL_obj, type = "interaction",
                         test_func = "lm", Boot = 50){
-  p <- ncol(eNODAL@Z)
+  p <- ncol(eNODAL_obj@Z)
   pvalue <- c()
   for(i in 1:p){
-    p_value[i] <- .hybrid_test(eNODAL, i, type, test_func, Boot)
+    p_value[i] <- .hybrid_test(eNODAL_obj, i, type, test_func, Boot)
   }
   return(p_value)
 }

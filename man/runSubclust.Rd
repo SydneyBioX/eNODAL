@@ -2,16 +2,16 @@
 % Please edit documentation in R/Stage2.R
 \name{runSubclust}
 \alias{runSubclust}
-\title{Run subclustering using with eNODAL object.}
+\title{Run subclustering using with eNODAL_obj object.}
 \usage{
-runSubclust(eNODAL)
+runSubclust(eNODAL_obj)
 }
 \arguments{
-\item{eNODAL}{Input eNODAL object.}
+\item{eNODAL_obj}{Input eNODAL object.}
 }
 \value{
 eNODAL object with clustering result(Stage II).
 }
 \description{
-Run subclustering using with eNODAL object.
+Run subclustering using with eNODAL_obj object.
 }

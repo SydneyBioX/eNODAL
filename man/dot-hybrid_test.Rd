@@ -4,10 +4,16 @@
 \alias{.hybrid_test}
 \title{Hybrid test for eNODAL object.}
 \usage{
-.hybrid_test(eNODAL, index, type = "interaction", test_func = "lm", Boot = 50)
+.hybrid_test(
+  eNODAL_obj,
+  index,
+  type = "interaction",
+  test_func = "lm",
+  Boot = 50
+)
 }
 \arguments{
-\item{eNODAL}{An eNODAL object as output.}
+\item{eNODAL_obj}{An eNODAL object as output.}
 
 \item{index}{Number of which omics feature to be tested.}
 
