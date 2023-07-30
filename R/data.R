@@ -21,3 +21,14 @@
 #' eNODAL_obj <- runeNODAL(eNODAL_obj)
 #' @usage data(eNODAL_example, package = 'eNODAL')
 "eNODAL_example"
+
+#' @title Full proteomics mouse nutrition experimental data
+#' @description A list of three type of data:
+#' @format A list of three type of data:
+#' \describe{
+#'   \item{Meta}{All phenotypical data}
+#'   \item{Prot_raw}{Raw proteomics data}
+#'   \item{Prot_RUV}{RUV processed proteomics data}
+#' }
+#' @usage data(Proteomics_full, package = 'eNODAL')
+"Proteomics_full"

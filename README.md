@@ -1,6 +1,6 @@
-# eNODAL 
+# NEMoE 
 
-eNODAL is an R package to analysis relationships between complex experimental conditions and high dimensional omics features. It supports two types of experimental conditions as input, which can be both (multivariate) numerical or categorical variables. eNODAL first uses an ANOVA-like test procedure to categorize high diemensional omics features into interpretable groups, which are significantly affected by 1) only condition A, 2) only condition B, 3) additive effect of A and B 4) interaction effect of A and B. Then eNODAL does consensus clustering for each interpretable group. eNODAL also provides a variaty of visualization of the result including nutrition geometry framework (NGF).
+eNODAL is an R package to analysis relationships between complex experimental conditions and high dimensional omics features. It support two types of experimental conditions as input, which can be both (mutivariate) numerical or categorical variable. eNODAL first use an ANOVA like test procedure to categorize high diemensional omics features into interpretable groups, which are significantly affected by 1) condition1, 2) condition2, 3) additive effect 4) interaction effect. Then eNODAL do consensus clustering for each interpretable group. eNODAL also provides variate of visualization of the result including nutrition geometry framework(NGF).
 
 ## Installation
 

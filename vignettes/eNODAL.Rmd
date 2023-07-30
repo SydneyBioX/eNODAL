@@ -46,8 +46,9 @@ The `Proteomics` dataset contain data from a mouse liver proteomics study,
 the nutrition intake of each constructed from a combination of 10 types of diet
 and the amount of food and nutrition is measured. Each mouse takes one of four 
 types of treatment, including control, metformin, rapamycin and resveratrol, resulting
-40 combinations of complex experimental conditions
+40 combinations of complex experimental conditions.
 
+For full dataset and raw dataset, please use `data(Proteomics_full)`
 
 In this example, we simplified to first 1,000 proteomics and we will use eNODAL
 to categorize each proteomics feature interpretable group, significantly affected by

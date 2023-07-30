@@ -1,7 +1,7 @@
 Package: eNODAL
 Type: Package
 Title: What the Package Does (Title Case)
-Version: 0.1.0
+Version: 0.1.1
 Author: Xiangnan Xu
 Maintainer: Xiangnan Xu <xiangnan.xu@sydney.edu.au>
 Description: Experimental guided nutriomics data clustering method(eNODAL) to
@@ -9,16 +9,17 @@ Description: Experimental guided nutriomics data clustering method(eNODAL) to
           experimental conditions.
 License: GPL (>= 3)
 Depends: R (>= 3.5)
-Imports: methods, stats, Matrix, graphics, mgcv, base, glmnet, 
-        globaltest, ggplot2, S4Vectors, apcluster, igraph, dynamicTreeCut,
-        geometry, MASS, grDevices, sp, metR, clusterProfiler, psych, utils, 
-        dbscan
+Imports: methods, stats, Matrix, graphics, mgcv, base, glmnet,
+        globaltest, ggplot2, S4Vectors, apcluster, igraph,
+        dynamicTreeCut, geometry, MASS, grDevices, sp, metR,
+        clusterProfiler, psych, utils, dbscan
 Suggests: knitr, rmarkdown
-Collate: build.R data.R eNODAL_class.R eNODAL_run.R LC_test.R
-        plot.R Stage1.R Stage2.R utils.R
+Collate: build.R data.R eNODAL_class.R eNODAL_run.R LC_test.R plot.R
+        Stage1.R Stage2.R utils.R
 VignetteBuilder: knitr
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
-Packaged: 2021-11-22 15:48:24 UTC; Lenovo
+Packaged: 2023-07-30 13:39:33 UTC; Lenovo
+NeedsCompilation: no
